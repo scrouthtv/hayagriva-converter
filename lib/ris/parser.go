@@ -313,14 +313,32 @@ func TypeFromRISString(s string) (common.Type, error) {
 	}
 }
 
+var formats = []string{
+"02 Jan 2006",
+"02 Jan. 2006",
+"Jan. 2006",
+"January 2006",
+}
+
 func parseDate(tok Token) (time.Time, error) {
+	for _, format := range formats {
+		t, err := time.Parse(format, tok.Value)
+		if err == nil {
+			return t, nil
+		}
+	}
 	switch len(tok.Value) {
 	case 2:
 		return time.Parse("06", tok.Value)
 	case 4:
 		return time.Parse("2006", tok.Value)
 	case 10:
-		return time.Parse("2006/01/02", tok.Value)
+		t, err := time.Parse("2006/01/02", tok.Value)
+		if err == nil {
+			return t, nil
+		}
+
+		return time.Parse("2006-01-02", tok.Value)
 	default:
 		return time.Time{}, NewParserError("date", fmt.Sprintf("unknown date format: %s", tok.Value))
 	}

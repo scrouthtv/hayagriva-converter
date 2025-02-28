@@ -116,18 +116,11 @@ func (e *HcEntry) setInformation(i common.Member) error {
 		e.Title = v.Title
 	case common.Caption:
 		e.Title = v.Content
-	case common.Keyword:
-		e.Title = v.Content
 	case common.Title:
 		e.Title = v.Content
-	case common.SecondaryTitle:
-		e.Title = v.Content
-	case common.TertiaryTitle:
-		e.Title = v.Content
-	case common.TranslatedTitle:
-		e.Title = v.Content
-	case common.ShortTitle:
-		e.Title = v.Content
+	case common.Keyword, common.SecondaryTitle, common.TertiaryTitle,
+		common.TranslatedTitle, common.ShortTitle:
+		log.Println("ignoring other title")
 	case common.WebsiteTitle:
 		e.Title = v.Content
 	default:
